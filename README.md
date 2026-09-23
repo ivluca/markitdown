@@ -7,28 +7,28 @@
 [![Python](https://img.shields.io/badge/python-3.10--3.14-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-**Chuyển đổi file sang Markdown — tối ưu cho LLM & pipeline phân tích văn bản**
+**Convert files to Markdown — optimized for LLMs & text analysis pipelines**
 
-[Cài đặt](#-cài-đặt) · [Sử dụng](#-sử-dụng) · [Script tiện ích](#-script-tiện-ích) · [Cập nhật](#-cập-nhật-từ-repo-gốc)
+[Installation](#-installation) · [Usage](#-usage) · [Custom Scripts](#️-custom-scripts) · [Update](#-update-from-upstream)
 
 </div>
 
 ---
 
-## 🗂️ Định dạng hỗ trợ
+## 🗂️ Supported Formats
 
-| Loại | Định dạng |
+| Type | Formats |
 |---|---|
-| 📄 Tài liệu | PDF · Word (`.docx`) · PowerPoint (`.pptx`) · Excel (`.xlsx`, `.xls`) |
-| 🌐 Web | HTML · YouTube URL |
-| 🖼️ Media | Ảnh (EXIF + OCR) · Audio (EXIF + phiên âm) |
-| 📦 Khác | CSV · JSON · XML · ZIP · EPubs |
+| 📄 Documents | PDF · Word (`.docx`) · PowerPoint (`.pptx`) · Excel (`.xlsx`, `.xls`) |
+| 🌐 Web | HTML · YouTube URLs |
+| 🖼️ Media | Images (EXIF + OCR) · Audio (EXIF + transcription) |
+| 📦 Other | CSV · JSON · XML · ZIP · EPubs |
 
 ---
 
-## 📦 Cài đặt
+## 📦 Installation
 
-### 1. Tạo môi trường ảo
+### 1. Create a virtual environment
 
 ```bash
 python -m venv .venv
@@ -37,29 +37,29 @@ source .venv/bin/activate        # Bash / Zsh
 source .venv/bin/activate.fish   # Fish shell
 ```
 
-### 2. Cài package
+### 2. Install the package
 
 ```bash
-# Tất cả định dạng
+# All formats
 pip install 'markitdown[all]'
 
-# Hoặc chỉ những định dạng cần dùng
+# Or only the formats you need
 pip install 'markitdown[pdf,docx,pptx,xlsx]'
 ```
 
 <details>
-<summary>📋 Xem toàn bộ tùy chọn</summary>
+<summary>📋 View all optional dependencies</summary>
 
-| Tùy chọn | Dùng cho |
+| Option | Format |
 |---|---|
-| `[all]` | Tất cả định dạng |
+| `[all]` | All formats |
 | `[pdf]` | PDF |
 | `[docx]` | Word |
 | `[pptx]` | PowerPoint |
-| `[xlsx]` / `[xls]` | Excel mới / cũ |
-| `[outlook]` | Email Outlook |
-| `[audio-transcription]` | Phiên âm audio (wav, mp3) |
-| `[youtube-transcription]` | Phụ đề YouTube |
+| `[xlsx]` / `[xls]` | Excel (new / old) |
+| `[outlook]` | Outlook email |
+| `[audio-transcription]` | Audio transcription (wav, mp3) |
+| `[youtube-transcription]` | YouTube captions |
 | `[az-doc-intel]` | Azure Document Intelligence |
 | `[az-content-understanding]` | Azure Content Understanding |
 
@@ -67,15 +67,15 @@ pip install 'markitdown[pdf,docx,pptx,xlsx]'
 
 ---
 
-## 🚀 Sử dụng
+## 🚀 Usage
 
 ### Command Line
 
 ```bash
-# Lưu ra file
+# Save to file
 markitdown file.pdf -o output.md
 
-# In ra màn hình
+# Print to stdout
 markitdown file.pdf
 
 # Pipe
@@ -93,9 +93,9 @@ print(result.markdown)
 ```
 
 > [!TIP]
-> Dùng `convert_local()` thay vì `convert()` khi chỉ cần đọc file local — an toàn hơn trong môi trường server.
+> Prefer `convert_local()` over `convert()` when only reading local files — safer in server environments.
 
-### Dùng với LLM (mô tả ảnh)
+### With LLM (image descriptions)
 
 ```python
 from markitdown import MarkItDown
@@ -123,85 +123,85 @@ markitdown file.pdf --use-cu
 
 ---
 
-## 🛠️ Script tiện ích
+## 🛠️ Custom Scripts
 
-> Repo này có thêm 2 script tùy chỉnh không có trong bản gốc.
+> This fork includes 2 additional scripts not present in the original repo.
 
-### `markitdown.sh` — Chạy nhanh, không cần activate venv
+### `markitdown.sh` — Run without activating venv
 
 ```bash
 ./markitdown.sh file.pdf -o output.md    # PDF
 ./markitdown.sh file.docx -o output.md   # Word
-./markitdown.sh file.xlsx                # Excel → in ra màn hình
+./markitdown.sh file.xlsx                # Excel → stdout
 ./markitdown.sh file.pptx -o output.md  # PowerPoint
 cat file.pdf | ./markitdown.sh           # Pipe
 ```
 
-**Dùng từ mọi nơi:**
+**Use globally from anywhere:**
 
 ```bash
-# Thêm alias vào ~/.bashrc hoặc ~/.config/fish/config.fish
+# Add alias to ~/.bashrc or ~/.config/fish/config.fish
 alias markitdown='/home/ubuntu/Programs/markitdown/markitdown.sh'
 
-# Hoặc tạo symlink
+# Or create a symlink
 sudo ln -s /home/ubuntu/Programs/markitdown/markitdown.sh /usr/local/bin/markitdown
 ```
 
 ---
 
-### `extract.py` — Trích xuất text + ảnh (giữ đúng vị trí)
+### `extract.py` — Extract text + images (preserving position)
 
 > [!NOTE]
-> MarkItDown **không giữ lại ảnh**. Script này kết hợp MarkItDown (text chất lượng cao) với PyMuPDF / python-pptx / openpyxl để trích xuất ảnh và nhúng đúng vị trí vào Markdown.
+> MarkItDown **does not preserve images**. This script combines MarkItDown (high-quality text) with PyMuPDF / python-pptx / openpyxl to extract images and embed them at the correct position in the Markdown output.
 
-**Cài thêm 1 lần:**
+**Install once:**
 
 ```bash
 pip install pymupdf
 ```
 
-**Cách dùng:**
+**Usage:**
 
 ```bash
 python extract.py file.pdf
 python extract.py file.pptx
 python extract.py file.xlsx
-python extract.py file.pdf --out ket_qua/
+python extract.py file.pdf --out output_dir/
 ```
 
-**Kết quả:**
+**Output structure:**
 
 ```
 📁 file_output/
-├── 📝 output.md        ← text + ảnh đúng vị trí
+├── 📝 output.md        ← text + images at correct positions
 ├── 🖼️  page1_img10.png
 ├── 🖼️  page1_img11.png
 └── 🖼️  page2_img15.png
 ```
 
-**Phân công xử lý:**
+**How it works:**
 
-| Phần | Xử lý bởi |
+| Part | Handled by |
 |---|---|
-| Text · Bảng · Heading · Bullet | MarkItDown |
-| Trích xuất ảnh + vị trí | PyMuPDF / python-pptx / openpyxl |
-| Ghép & xuất output | `extract.py` |
+| Text · Tables · Headings · Bullets | MarkItDown |
+| Image extraction + positioning | PyMuPDF / python-pptx / openpyxl |
+| Merging & output | `extract.py` |
 
-**Hỗ trợ:** `.pdf` · `.pptx` · `.xlsx` · `.xls`
+**Supported formats:** `.pdf` · `.pptx` · `.xlsx` · `.xls`
 
 ---
 
-## 🔒 Bảo mật
+## 🔒 Security
 
 > [!WARNING]
-> Không truyền input không tin cậy trực tiếp vào MarkItDown trong môi trường server.
+> Do not pass untrusted input directly to MarkItDown in server or hosted environments.
 
-- Dùng `convert_local()` nếu chỉ cần đọc file local
-- Kiểm soát chặt đường dẫn và URI scheme khi deploy
+- Use `convert_local()` instead of `convert()` when only reading local files
+- Restrict file paths and URI schemes when deploying as a service
 
 ---
 
-## 🔄 Cập nhật từ repo gốc
+## 🔄 Update from Upstream
 
 ```bash
 git fetch upstream
@@ -210,4 +210,4 @@ git push origin main
 ```
 
 > [!NOTE]
-> Nếu có conflict ở `README.md` (do đã tùy chỉnh), giữ lại bản của bạn hoặc merge thủ công rồi commit lại.
+> If there is a conflict in `README.md` (due to local customizations), keep your version or merge manually, then commit again.
