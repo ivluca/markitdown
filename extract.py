@@ -255,7 +255,7 @@ def main():
         print("   Hỗ trợ: .pdf | .pptx | .xlsx | .xls")
         sys.exit(1)
 
-    md_path = os.path.join(output_dir, "output.md")
+    md_path = os.path.join(output_dir, f"{base_name}.md")
     with open(md_path, "w", encoding="utf-8") as f:
         f.write(md)
 
